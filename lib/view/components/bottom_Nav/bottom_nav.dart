@@ -27,6 +27,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
 
   List<String> iconList = [
     MyImages.homeIcon,
+    MyImages.awardIcon,
     MyImages.plansIcon,
     MyImages.historyIcon,
     MyImages.menuIcon
@@ -34,6 +35,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
 
   final textList = [
     MyStrings.home,
+    MyStrings.award,
     MyStrings.plan,
     MyStrings.history,
     MyStrings.menu
@@ -95,12 +97,17 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
     }
 
     else if (index == 1) {
+      if (!(widget.currentIndex == 1)) {
+        Get.toNamed(RouteHelper.awardScreen);
+      }
+    }
+    else if (index == 2) {
       if (!(widget.currentIndex == 2)) {
         Get.toNamed(RouteHelper.planScreen);
       }
     }
 
-    else if (index == 2) {
+    else if (index == 3) {
       if (!(widget.currentIndex == 2)) {
         CustomBottomSheet(
             isNeedMargin: true,
@@ -110,8 +117,8 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
       }
     }
 
-    else if (index == 3) {
-      if (!(widget.currentIndex == 3)) {
+    else if (index == 4) {
+      if (!(widget.currentIndex == 4)) {
         Get.toNamed(RouteHelper.menuScreen);
       }
     }

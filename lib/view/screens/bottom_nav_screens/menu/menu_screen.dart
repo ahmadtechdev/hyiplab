@@ -341,7 +341,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   ],
                 ),
               ),
-              bottomNavigationBar: const CustomBottomNav(currentIndex: 3),
+              bottomNavigationBar: const CustomBottomNav(currentIndex: 4),
             ),
           ));
       });

@@ -73,7 +73,7 @@ class _PlanScreenState extends State<PlanScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
+          bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
         ),
       ),
     ));

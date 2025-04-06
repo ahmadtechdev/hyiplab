@@ -427,6 +427,7 @@ class MyStrings {
   static const String logout = "logout";
   static const String menu = "Menu";
   static const String home = "Home";
+  static const String award = "Earn";
 
   static const String writeSomething = "Write something...";
   static const String badResponseMsg = 'Bad Response Format!';

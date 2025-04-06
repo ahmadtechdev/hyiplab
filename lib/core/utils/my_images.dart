@@ -62,6 +62,7 @@ class MyImages {
 
 
   static const String homeIcon = 'assets/images/bottom_nav/home.svg';
+  static const String awardIcon = 'assets/images/bottom_nav/award.svg';
   static const String plansIcon = 'assets/images/bottom_nav/plan.svg';
   static const String historyIcon = 'assets/images/bottom_nav/history2.svg';
   static const String menuIcon = 'assets/images/bottom_nav/menu.svg';

@@ -39,7 +39,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/model/user/user.dart';
 import '../../data/services/push_notification_service.dart';
+import '../../view/airdrop/airdrop_screen.dart';
 import '../../view/components/preview_image.dart';
+import '../../view/screens/earn_game/earn_game.dart';
 import '../../view/screens/ticket/all_ticket_screen/all_ticket_screen.dart';
 import '../../view/screens/ticket/new_ticket_screen/new_ticket_screen.dart';
 import '../../view/screens/ticket/ticket_details_screen/ticket_details_screen.dart';
@@ -58,6 +60,7 @@ class RouteHelper {
   static const String verifyPassCodeScreen = '/verify_pass_code_screen';
   static const String resetPasswordScreen = '/reset_pass_screen';
   static const String homeScreen = '/home_screen';
+  static const String airdrop = '/airdrop_screen';
   static const String profileCompleteScreen = '/profile_complete_screen';
   static const String depositScreen = '/deposit_screen';
   static const String investmentScreen = '/investment_screen';
@@ -70,6 +73,7 @@ class RouteHelper {
   static const String kycScreen = '/kyc_screen';
   static const String menuScreen = '/menu_screen';
   static const String planScreen = '/plan_screen';
+  static const String awardScreen = '/award_screen';
   static const String referralScreen = "/referral_screen";
   static const String userAccountScreen = "/user_account_screen";
   static const String editProfileScreen = "/edit_profile_screen";
@@ -112,6 +116,7 @@ class RouteHelper {
     GetPage(name: verifyPassCodeScreen, page: () => const VerifyForgetPassScreen()),
     GetPage(name: resetPasswordScreen, page: () => const ResetPasswordScreen()),
     GetPage(name: homeScreen, page: () => const HomeScreen()),
+    GetPage(name: airdrop, page: () => const AirdropScreen()),
     GetPage(name: depositScreen, page: () => const DepositHistoryScreen()),
     GetPage(name: depositWebViewScreen, page: () => WebViewExample(redirectUrl: Get.arguments)),
 
@@ -126,6 +131,7 @@ class RouteHelper {
     GetPage(name: menuScreen, page: () => const MenuScreen()),
     GetPage(name: investmentScreen, page: () => const InvestmentScreen()),
     GetPage(name: planScreen, page: () => const PlanScreen()),
+    GetPage(name: awardScreen, page: () => EarnGameScreen()),
     GetPage(name: referralScreen, page: () => const ReferralScreen()),
     GetPage(name: userAccountScreen, page: () => const UserAccountScreen()),
     GetPage(name: editProfileScreen, page: () => const EditProfileScreen()),

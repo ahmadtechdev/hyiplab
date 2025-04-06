@@ -109,11 +109,11 @@ class RegistrationController extends GetxController {
     // String referenceValue = referralCodeController.text.toString().split('=').last;
 
     String referenceValue = referralCodeController.text.toString().split('=').last;
-String country = "$countryController:$countryCode";
+String country = countryController.text.toString();
     SignUpModel model = SignUpModel(
       firstName: fNameController.text.toString(),
       lastName: lNameController.text.toString(),
-      country: country,
+      // country: country,
       email: emailController.text.toString(),
       password: passwordController.text.toString(),
       refference: referenceValue.toString(),

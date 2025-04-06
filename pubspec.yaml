@@ -54,6 +54,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/game/
     - assets/images/onboard/
     - assets/images/logo/
     - assets/images/social/
