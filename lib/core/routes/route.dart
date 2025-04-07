@@ -41,6 +41,7 @@ import '../../data/model/user/user.dart';
 import '../../data/services/push_notification_service.dart';
 import '../../view/airdrop/airdrop_screen.dart';
 import '../../view/components/preview_image.dart';
+import '../../view/screens/deposit/deposit_method/desposit_web_view.dart';
 import '../../view/screens/earn_game/earn_game.dart';
 import '../../view/screens/ticket/all_ticket_screen/all_ticket_screen.dart';
 import '../../view/screens/ticket/new_ticket_screen/new_ticket_screen.dart';
@@ -102,6 +103,8 @@ class RouteHelper {
   static const String newTicketScreen          = '/new_ticket_screen';
   static const String previewImageScreen       = "/preview-image-screen";
 
+
+
   static List<GetPage> routes = [
     GetPage(name: onboardScreen, page: () => const OnBoardingScreen()),
 
@@ -118,7 +121,7 @@ class RouteHelper {
     GetPage(name: homeScreen, page: () => const HomeScreen()),
     GetPage(name: airdrop, page: () => const AirdropScreen()),
     GetPage(name: depositScreen, page: () => const DepositHistoryScreen()),
-    GetPage(name: depositWebViewScreen, page: () => WebViewExample(redirectUrl: Get.arguments)),
+    // GetPage(name: depositWebViewScreen, page: () => WebViewExample(redirectUrl: Get.arguments)),
 
     //withdraw
     GetPage(name: confirmWithdrawRequest, page: () => ConfirmWithdrawScreen(model: Get.arguments[0])),
@@ -152,6 +155,12 @@ class RouteHelper {
     GetPage(name: twoFactorScreen, page: () => const TwoFactorVerificationScreen()),
     GetPage(name: twoFactorSetupScreen, page: () => const TwoFactorSetupScreen()),
     GetPage(name: languageScreen, page: () => const LanguageScreen()),
+
+    GetPage(
+      name: depositWebViewScreen,
+      page: () => const DepositWebViewScreen(),
+      transition: Transition.rightToLeft,
+    ),
 
     //support ticket
     GetPage(name: allTicketScreen, page: () => const AllTicketScreen()),

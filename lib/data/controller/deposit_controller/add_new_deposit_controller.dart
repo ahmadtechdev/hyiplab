@@ -103,31 +103,32 @@ class AddNewDepositController extends GetxController{
 
   bool submitLoading = false;
 
-  void submitDeposit()async{
+  void submitDeposit() async {
+    String amount = amountController.text.toString();
+    String methodCode = paymentMethod?.methodCode.toString() ?? '-1';
 
-    String amount=amountController.text.toString();
-    String methodCode= paymentMethod?.methodCode.toString()??'-1';
-    if(amount.isEmpty){
+    if (amount.isEmpty) {
       CustomSnackBar.error(errorList: ['${MyStrings.please} ${MyStrings.enterAmount.toLowerCase()}']);
       return;
     }
-    if(methodCode=='-1'){
+
+    if (methodCode == '-1') {
       CustomSnackBar.error(errorList: ['${MyStrings.please} ${MyStrings.selectAWallet.toLowerCase()}']);
       return;
     }
 
-    double amount1=0;
-    double maxAmount=0;
+    double amount1 = 0;
+    double maxAmount = 0;
 
-    try{
-      amount1=double.parse(amount);
-      maxAmount=double.parse(paymentMethod?.maxAmount??'0');
-    }catch(e){
+    try {
+      amount1 = double.parse(amount);
+      maxAmount = double.parse(paymentMethod?.maxAmount ?? '0');
+    } catch (e) {
       return;
     }
 
-    if(maxAmount==0||amount1==0){
-      List<String>errorList=[MyStrings.invalidAmount];
+    if (maxAmount == 0 || amount1 == 0) {
+      List<String> errorList = [MyStrings.invalidAmount];
       CustomSnackBar.error(errorList: errorList);
       return;
     }
@@ -135,30 +136,40 @@ class AddNewDepositController extends GetxController{
     submitLoading = true;
     update();
 
-    DepositInsertModel model = DepositInsertModel(methodCode: paymentMethod?.methodCode.toString()??'-1', amount: amount1, currency: paymentMethod?.currency??'');
-    print("object");
-    print(model);
-    DepositInsertResponseModel insertModel = await depositRepo.insertDeposit(model);
-    print(insertModel);
-    print(insertModel.data);
-    if(insertModel.data == null || insertModel.data?.redirectUrl == null){
-      CustomSnackBar.error(errorList: insertModel.message?.error??[MyStrings.requestFail]);
-    }else{
-      String redirectUrl = insertModel.data?.redirectUrl??'';
-      print("cjeck");
-      print(redirectUrl);
-      if(redirectUrl.isEmpty){
-        List<String>error=[MyStrings.noRedirectUrlFound];
-        CustomSnackBar.error(errorList:error);
-      }else{
-        amountController.text='';
-        showWebView(redirectUrl);
-      }
-    }
+    // For direct WebView navigation without API call:
+    Get.back();
+    Get.toNamed(
+        RouteHelper.depositWebViewScreen,
+        arguments: {'amount': amount}
+    );
 
     submitLoading = false;
     update();
 
+    // Original API method for reference (commented out)
+    /*
+  DepositInsertModel model = DepositInsertModel(
+    methodCode: paymentMethod?.methodCode.toString() ?? '-1',
+    amount: amount1,
+    currency: paymentMethod?.currency ?? ''
+  );
+
+  DepositInsertResponseModel insertModel = await depositRepo.insertDeposit(model);
+
+  if (insertModel.data == null || insertModel.data?.redirectUrl == null) {
+    CustomSnackBar.error(errorList: insertModel.message?.error ?? [MyStrings.requestFail]);
+  } else {
+    String redirectUrl = insertModel.data?.redirectUrl ?? '';
+
+    if (redirectUrl.isEmpty) {
+      List<String> error = [MyStrings.noRedirectUrlFound];
+      CustomSnackBar.error(errorList: error);
+    } else {
+      amountController.text = '';
+      showWebView(redirectUrl);
+    }
+  }
+  */
   }
 
   setStatusTrue(){

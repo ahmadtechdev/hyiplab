@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import '../../core/helper/shared_preference_helper.dart';
 import '../../core/utils/style.dart';
 import '../../core/utils/url.dart';
 import '../../data/controller/common/theme_controller.dart';
@@ -197,7 +198,7 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
     try {
       // Get auth token from your auth provider or local storage
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('auth_token') ?? '';
+      final token = prefs.getString(SharedPreferenceHelper.accessTokenKey) ?? '';
 
       print("check");
       print(token);
