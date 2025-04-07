@@ -136,12 +136,17 @@ class AddNewDepositController extends GetxController{
     update();
 
     DepositInsertModel model = DepositInsertModel(methodCode: paymentMethod?.methodCode.toString()??'-1', amount: amount1, currency: paymentMethod?.currency??'');
+    print("object");
+    print(model);
     DepositInsertResponseModel insertModel = await depositRepo.insertDeposit(model);
-
+    print(insertModel);
+    print(insertModel.data);
     if(insertModel.data == null || insertModel.data?.redirectUrl == null){
       CustomSnackBar.error(errorList: insertModel.message?.error??[MyStrings.requestFail]);
     }else{
       String redirectUrl = insertModel.data?.redirectUrl??'';
+      print("cjeck");
+      print(redirectUrl);
       if(redirectUrl.isEmpty){
         List<String>error=[MyStrings.noRedirectUrlFound];
         CustomSnackBar.error(errorList:error);

@@ -15,6 +15,8 @@ class RoundedButton extends StatelessWidget {
   final Color borderColor;
   final bool isLoading;
   final Widget? child;
+  final double opacity;
+
   const RoundedButton({
     Key? key,
     this.width=1,
@@ -28,12 +30,15 @@ class RoundedButton extends StatelessWidget {
     this.textColor = MyColor.colorBlack,
     this.borderColor = MyColor.borderColor,
     this.isLoading = false,
-    this.child
+    this.child,
+    this.opacity = 1.0,
   }):super(key: key) ;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    // final effectiveColor = color.withOpacity(opacity);
+
     return isOutlined? GestureDetector(
       onTap: press,
       child: Container(
@@ -68,7 +73,7 @@ class RoundedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: press,
       style: ElevatedButton.styleFrom(
-          backgroundColor: color,
+          backgroundColor: color.withOpacity(opacity),
           shadowColor: MyColor.transparentColor,
           padding:  EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
           textStyle: TextStyle(

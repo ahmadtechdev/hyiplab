@@ -43,6 +43,10 @@ dependencies:
   equatable: ^2.0.7
   country_picker: ^2.0.27
   country_pickers: ^3.0.1
+  flutter_web3: ^2.1.9
+  ethereum_addresses: ^1.0.2
+  web3dart: ^2.6.1
+  walletconnect_dart: ^0.0.11
 
 dev_dependencies:
   flutter_test:

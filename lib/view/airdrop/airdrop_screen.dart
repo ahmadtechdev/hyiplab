@@ -6,9 +6,15 @@ import 'dart:math' as math;
 import 'package:hyip_lab/core/utils/dimensions.dart';
 import 'package:hyip_lab/core/utils/my_color.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../../core/utils/style.dart';
+import '../../core/utils/url.dart';
 import '../../data/controller/common/theme_controller.dart';
+
 
 class AirdropScreen extends StatefulWidget {
   const AirdropScreen({Key? key}) : super(key: key);
@@ -19,8 +25,16 @@ class AirdropScreen extends StatefulWidget {
 
 class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateMixin {
   int tapCount = 0;
+  int pendingCmcToSync = 0;
+  int totalCmcCollected = 0;
   bool isAnimating = false;
   bool showReward = false;
+  bool dailyCheckInClaimed = false;
+  bool isLoading = true;
+  String checkInMessage = '';
+
+  // Date tracking for daily rewards
+  String? lastCheckInDate;
 
   // Controllers for various animations
   late AnimationController _pulseController;
@@ -67,6 +81,58 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
     Future.delayed(const Duration(milliseconds: 200), () {
       _scaleController.forward();
     });
+
+    // Check for daily reward
+    _checkDailyReward();
+  }
+
+  Future<void> _checkDailyReward() async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    lastCheckInDate = prefs.getString('last_check_in_date');
+
+    setState(() {
+      dailyCheckInClaimed = lastCheckInDate == today;
+      isLoading = false;
+    });
+
+    if (!dailyCheckInClaimed) {
+      setState(() {
+        checkInMessage = 'Claim your daily 5 CMC bonus!';
+      });
+    }
+  }
+
+  Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Load stored counts
+    setState(() {
+      tapCount = prefs.getInt('cmc_tap_count') ?? 0;
+      pendingCmcToSync = prefs.getInt('pending_cmc_sync') ?? 0;
+      totalCmcCollected = prefs.getInt('total_cmc_collected') ?? 0;
+      lastCheckInDate = prefs.getString('last_check_in_date');
+
+      // Check if daily reward is available
+      final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      dailyCheckInClaimed = lastCheckInDate == today;
+
+      isLoading = false;
+    });
+
+    // If daily reward not claimed yet today, show message
+    if (!dailyCheckInClaimed) {
+      setState(() {
+        checkInMessage = 'Claim your daily 5 CMC bonus!';
+      });
+    }
+  }
+
+  Future<void> _saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('cmc_tap_count', tapCount);
+    await prefs.setInt('pending_cmc_sync', pendingCmcToSync);
+    await prefs.setInt('total_cmc_collected', totalCmcCollected);
   }
 
   @override
@@ -76,26 +142,132 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
     _scaleController.dispose();
     _bounceController.dispose();
     _confettiController.dispose();
+    _saveData(); // Save data when leaving the screen
     super.dispose();
   }
 
+  Future<void> _claimDailyBonus() async {
+    if (dailyCheckInClaimed) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Record that daily bonus was claimed
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      await prefs.setString('last_check_in_date', today);
+
+      // Add 5 CMC and show animation
+      setState(() {
+        tapCount += 5;
+        totalCmcCollected += 5;
+        dailyCheckInClaimed = true;
+        checkInMessage = '';
+        showReward = true;
+      });
+
+      // Send API request for daily bonus
+      await _sendCmcToServer(5);
+      print('Successfully sent daily 5 CMC to server');
+
+      _confettiController.forward(from: 0.0);
+
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted) {
+          setState(() {
+            showReward = false;
+          });
+        }
+      });
+    } catch (e) {
+      print('Failed to claim daily bonus: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to claim daily bonus: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _sendCmcToServer(int amount) async {
+    try {
+      // Get auth token from your auth provider or local storage
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token') ?? '';
+
+      print("check");
+      print(token);
+
+      final response = await http.post(
+        Uri.parse(UrlContainer.baseUrl + UrlContainer.airDropEndPoint),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'cmc': amount,
+        }),
+      );
+
+      print(response.body);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['status'] == 'success') {
+          // Success - update pending count
+          setState(() {
+            pendingCmcToSync -= amount;
+          });
+          await _saveData();
+        } else {
+          // API returned error
+          throw Exception(data['message'] ?? 'Failed to sync CMC');
+        }
+      } else {
+        // HTTP error
+        throw Exception('Server error: ${response.statusCode}');
+      }
+    } catch (e) {
+      // If API fails, we'll try again next time
+      print('Error syncing CMC: $e');
+      // Don't update pendingCmcToSync so we'll try again later
+      rethrow;
+    }
+  }
   void _handleTap() {
-    // Haptic feedback for better tactile response
     HapticFeedback.mediumImpact();
 
     setState(() {
       tapCount++;
-      isAnimating = true;
+      totalCmcCollected++;
 
       // Generate random particles
       _generateParticles();
+      isAnimating = true;
 
-      // Show reward animation at milestone taps (50, 100, etc.)
+      // Show reward animation at milestone taps (every 50 taps)
       if (tapCount % 50 == 0) {
         showReward = true;
         _confettiController.forward(from: 0.0);
 
-        // Hide reward overlay after animation but keep taps working
+        // Send 50 CMC to server
+        _sendCmcToServer(50).then((_) {
+          print('Successfully sent 50 CMC to server');
+        }).catchError((e) {
+          print('Failed to send CMC to server: $e');
+          // Optionally show error to user
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to sync CMC. Will retry next time.'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        });
+
+        // Hide reward overlay after animation
         Future.delayed(const Duration(seconds: 3), () {
           if (mounted) {
             setState(() {
@@ -110,7 +282,7 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
     _pulseController.forward(from: 0.0);
     _bounceController.forward(from: 0.0);
 
-    // Reset animation state after animation completes
+    // Reset animation state
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) {
         setState(() {
@@ -118,6 +290,26 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
         });
       }
     });
+  }
+  Future<void> _syncWithServer() async {
+    // Only sync if we have enough pending CMCs to make it worthwhile
+    if (pendingCmcToSync >= 50) {
+      try {
+        // Send the pending CMCs to server
+        await _sendCmcToServer(pendingCmcToSync);
+      } catch (e) {
+        // If sync fails, we'll try again next time
+        print('Failed to sync CMC: $e');
+        // Show a non-intrusive notification
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('CMC sync will retry later'),
+            duration: const Duration(seconds: 2),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+    }
   }
 
   void _generateParticles() {
@@ -238,7 +430,7 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
                           return Transform.scale(
                             scale: 1.0 + _bounceController.value * 0.2,
                             child: Text(
-                              'Airdrops: $tapCount',
+                              'CMC: $tapCount',
                               style: interBoldHeader1.copyWith(
                                 color: primaryColor,
                               ),
@@ -246,12 +438,64 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
                           );
                         },
                       ),
-                      const SizedBox(width: 40),
+                      isLoading
+                          ? SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                        ),
+                      )
+                          : const SizedBox(width: 40),
                     ],
                   ),
                 ),
 
-                const SizedBox(height: Dimensions.space30),
+                // Check-in banner (only show if not claimed)
+                if (!dailyCheckInClaimed && checkInMessage.isNotEmpty)
+                  GestureDetector(
+                    onTap: _claimDailyBonus,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: Dimensions.space15),
+                      padding: const EdgeInsets.all(Dimensions.space10),
+                      decoration: BoxDecoration(
+                        color: isDarkTheme
+                            ? primaryColor.withOpacity(0.2)
+                            : primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(Dimensions.defaultRadius),
+                        border: Border.all(
+                          color: primaryColor.withOpacity(0.5),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.card_giftcard,
+                            color: primaryColor,
+                          ),
+                          const SizedBox(width: Dimensions.space10),
+                          Expanded(
+                            child: Text(
+                              checkInMessage,
+                              style: interSemiBoldDefault.copyWith(
+                                color: primaryColor,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Claim Now',
+                            style: interBoldDefault.copyWith(
+                              color: primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                const SizedBox(height: Dimensions.space20),
 
                 // Main content - Tap area
                 Expanded(
@@ -261,8 +505,19 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
                       children: [
                         // Instructions text
                         Text(
-                          'Tap repeatedly to collect airdrops!',
+                          'Tap repeatedly to collect CMC!',
                           style: interSemiBoldLarge.copyWith(
+                            color: labelColor,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: Dimensions.space10),
+
+                        // Total collected
+                        Text(
+                          'Total collected: $totalCmcCollected',
+                          style: interRegularDefault.copyWith(
                             color: labelColor,
                           ),
                           textAlign: TextAlign.center,
@@ -394,6 +649,7 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
                         const SizedBox(height: Dimensions.space40),
 
                         // Progress indicator
+                        // In the progress indicator widget, replace with:
                         SizedBox(
                           width: 200,
                           child: Column(
@@ -494,14 +750,16 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
                           ),
                           const SizedBox(height: Dimensions.space10),
                           Text(
-                            'Airdrop Milestone!',
+                            dailyCheckInClaimed ? 'CMC Milestone!' : 'Daily Bonus!',
                             style: interBoldHeader1.copyWith(
                               color: textColor,
                             ),
                           ),
                           const SizedBox(height: Dimensions.space5),
                           Text(
-                            'You earned a bonus airdrop!',
+                            dailyCheckInClaimed
+                                ? 'You reached ${tapCount} CMC!'
+                                : 'You claimed 5 CMC daily bonus!',
                             style: interRegularLarge.copyWith(
                               color: labelColor,
                             ),

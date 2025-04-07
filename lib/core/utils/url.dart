@@ -15,6 +15,9 @@ class UrlContainer {
   static const String referralEndPoint       = "my-referrals";
   static const String verify2FAUrl           = 'verify-g2fa';
 
+  static const String airDropEndPoint           = 'cmc';
+
+
   static const String verifyEmailEndPoint       = 'verify-email';
   static const String verifySmsEndPoint         = 'verify-mobile';
   static const String resendVerifyCodeEndPoint  = 'resend-verify/';
@@ -90,6 +93,7 @@ class UrlContainer {
 
   static const String metamaskGetMessageEndPoint = 'web3/metamask-login/message';
   static const String metamaskMessageVerifyEndPoint = 'web3/metamask-login/verify';
+  static const String cryptoDepositUrl = 'api/user/deposit/crypto/confirm';
 
   static const String sheduleEndPoint = 'invest/schedules';
   static const String sheduleStatusEndPoint = 'invest/schedule/status';

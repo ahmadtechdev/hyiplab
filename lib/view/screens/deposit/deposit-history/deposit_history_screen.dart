@@ -18,6 +18,8 @@ import 'package:hyip_lab/view/screens/deposit/deposit-history/widget/custom_depo
 import 'package:hyip_lab/view/screens/deposit/deposit-history/widget/deposit_history_top.dart';
 import 'package:hyip_lab/view/screens/deposit/deposit_method/add_deposit_method.dart';
 
+import '../../../../metamask/metamask_deposit_screen.dart';
+
 class DepositHistoryScreen extends StatefulWidget {
   const DepositHistoryScreen({Key? key}) : super(key: key);
 
@@ -91,6 +93,7 @@ class _DepositHistoryScreenState extends State<DepositHistoryScreen> {
                           HeaderText(text: MyStrings.depositMoney, textAlign: TextAlign.center, textStyle: interRegularLarge),
                           SizedBox(height: Dimensions.space30),
                           AddDepositMethod(),
+                          // MetaMaskDepositScreen(),
                         ],
                       )
                   ).customBottomSheet(context);
