@@ -148,14 +148,14 @@ class _PoolCardWidgetState extends State<PoolCardWidget> {
                     ),
                     // const CustomDivider(space: Dimensions.space15),
                     const SizedBox(height: Dimensions.space25),
-                    RoundedButton(
-                      press: () {
-                        Get.toNamed(RouteHelper.addpoolScreen, arguments: controller.poolList[widget.index].id);
-                      },
-                      color: MyColor.getButtonColor(),
-                      textColor: MyColor.getButtonTextColor(),
-                      text: MyStrings.investNow,
-                    )
+                    // RoundedButton(
+                    //   press: () {
+                    //     Get.toNamed(RouteHelper.addpoolScreen, arguments: controller.poolList[widget.index].id);
+                    //   },
+                    //   color: MyColor.getButtonColor(),
+                    //   textColor: MyColor.getButtonTextColor(),
+                    //   text: MyStrings.investNow,
+                    // )
                   ],
                 ),
               )

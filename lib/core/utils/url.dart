@@ -1,7 +1,7 @@
 class UrlContainer {
   // static const String domainUrl = 'https://script.viserlab.com/hyiplab/demo';
   // static const String domainUrl = 'https://url8.viserlab.com/api_test/hyiylab';
-  static const String domainUrl = 'https://viserlab.girdonawah.com';
+  static const String domainUrl = 'https://clicksmax.com';
   // static const String domainUrl = 'http://hyipriooffical.test';
   static const String baseUrl = '$domainUrl/api/';
 
@@ -16,6 +16,8 @@ class UrlContainer {
   static const String verify2FAUrl           = 'verify-g2fa';
 
   static const String airDropEndPoint           = 'cmc';
+  static const String getCmcEndPoint           = 'get-cmc';
+  static const String earnAwardEndpoint           = 'earn';
 
 
   static const String verifyEmailEndPoint       = 'verify-email';

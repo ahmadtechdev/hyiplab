@@ -185,6 +185,7 @@ class HomeBottomSection extends StatelessWidget {
                 separatorBuilder: (context, index) => const SizedBox(height: Dimensions.space10),
                 itemBuilder: (context, index) {
                   investment.Data model = controller.activePlanList[index];
+
                   return ActivePlanCard(
                     investmentId: model.id.toString(),
                     hasCapital: model.plan?.capitalBack == '1' ? true : false,
@@ -195,6 +196,7 @@ class HomeBottomSection extends StatelessWidget {
                     invested: '${Converter.twoDecimalPlaceFixedWithoutRounding(model.amount ?? '')} ${controller.currency}',
                     isActive: true,
                     message: controller.getMessage(index),
+                    earn: model.earn ?? '0',
                   );
                 },
               )

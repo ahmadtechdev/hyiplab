@@ -83,8 +83,56 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
       _scaleController.forward();
     });
 
-    // Check for daily reward
-    _checkDailyReward();
+    // Fetch CMC data from API first, then check daily reward
+    _fetchCmcData().then((_) {
+      _checkDailyReward();
+    });
+  }
+
+  // New method to fetch CMC data from API
+  Future<void> _fetchCmcData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(SharedPreferenceHelper.accessTokenKey) ?? '';
+
+      final response = await http.get(
+        Uri.parse(UrlContainer.baseUrl + UrlContainer.getCmcEndPoint),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['status'] == 'success' && data['data'] != null && data['data']['cmc'] != null) {
+          setState(() {
+            tapCount = data['data']['cmc'];
+            totalCmcCollected = data['data']['cmc'];
+          });
+
+          // Update SharedPreferences with the new values
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setInt('cmc_tap_count', tapCount);
+          await prefs.setInt('total_cmc_collected', totalCmcCollected);
+
+          print('Successfully loaded CMC data: $tapCount');
+        } else {
+          print('Invalid API response format');
+          // Fall back to stored values
+          await _loadData();
+        }
+      } else {
+        print('API error: ${response.statusCode}');
+        // Fall back to stored values
+        await _loadData();
+      }
+    } catch (e) {
+      print('Error fetching CMC data: $e');
+      // Fall back to stored values
+      await _loadData();
+    }
   }
 
   Future<void> _checkDailyReward() async {
@@ -291,26 +339,6 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
         });
       }
     });
-  }
-  Future<void> _syncWithServer() async {
-    // Only sync if we have enough pending CMCs to make it worthwhile
-    if (pendingCmcToSync >= 50) {
-      try {
-        // Send the pending CMCs to server
-        await _sendCmcToServer(pendingCmcToSync);
-      } catch (e) {
-        // If sync fails, we'll try again next time
-        print('Failed to sync CMC: $e');
-        // Show a non-intrusive notification
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('CMC sync will retry later'),
-            duration: const Duration(seconds: 2),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-    }
   }
 
   void _generateParticles() {
@@ -593,53 +621,58 @@ class _AirdropScreenState extends State<AirdropScreen> with TickerProviderStateM
                                 builder: (context, child) {
                                   return Transform.scale(
                                     scale: _scaleController.value,
-                                    child: Container(
-                                      width: 160,
-                                      height: 160,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: RadialGradient(
-                                          colors: [
-                                            primaryColor,
-                                            isDarkTheme
-                                                ? MyColor.cardPrimaryColor
-                                                : MyColor.lTextColor.withOpacity(0.4),
-                                          ],
-                                          radius: 0.8,
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: shadowColor,
-                                            blurRadius: 15,
-                                            spreadRadius: 5,
+                                    child: // This is the modified section of the AirdropScreen where the CMC coin size is increased
+// Replace the existing code with this section when you find the coin image in the main tap circle area
+
+// Find this part in your existing code (around line 600-620):
+                                      Container(
+                                        width: 160,
+                                        height: 160,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: RadialGradient(
+                                            colors: [
+                                              primaryColor,
+                                              isDarkTheme
+                                                  ? MyColor.cardPrimaryColor
+                                                  : MyColor.lTextColor.withOpacity(0.4),
+                                            ],
+                                            radius: 0.8,
                                           ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.air_rounded,
-                                              size: 50,
-                                              color: isDarkTheme
-                                                  ? MyColor.colorWhite.withOpacity(0.9)
-                                                  : Colors.white.withOpacity(0.9),
-                                            ),
-                                            const SizedBox(height: Dimensions.space10),
-                                            Text(
-                                              'TAP!',
-                                              style: interBoldLarge.copyWith(
-                                                color: isDarkTheme
-                                                    ? Colors.white
-                                                    : Colors.white,
-                                                letterSpacing: 1.5,
-                                              ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: shadowColor,
+                                              blurRadius: 15,
+                                              spreadRadius: 5,
                                             ),
                                           ],
                                         ),
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              // Replace this Image widget with the one below:
+                                              Image.asset(
+                                                'assets/images/cmc_coin.png',
+                                                width: 100, // Increased from 60 to 100
+                                                height: 100, // Increased from 60 to 100
+                                                fit: BoxFit.contain, // Added to ensure proper scaling
+                                              ),
+                                              // Reduced the spacing to accommodate larger image
+                                              const SizedBox(height: Dimensions.space5),
+                                              Text(
+                                                'TAP!',
+                                                style: interBoldLarge.copyWith(
+                                                  color: isDarkTheme
+                                                      ? Colors.white
+                                                      : Colors.white,
+                                                  letterSpacing: 1.5,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
                                   );
                                 },
                               ),

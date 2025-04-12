@@ -72,15 +72,18 @@ class Referrals {
   Referrals({
     required this.id,
     required this.username,
-    required this.level,});
+    required this.level,
+  });
 
   Referrals.fromJson(dynamic json) {
     id = json['id'];
-    username = json['username'];
+    // Allow username to be null by using null-aware operator
+    username = json['username'] ?? "";
     level = json['level'].toString();
   }
+
   late int id;
-  late String username;
+  late String username; // We'll store empty string if null
   late String level;
 
   Map<String, dynamic> toJson() {
@@ -90,7 +93,6 @@ class Referrals {
     map['level'] = level;
     return map;
   }
-
 }
 
 

@@ -86,26 +86,26 @@ class _RankingScreenState extends State<RankingScreen> {
                       children: [
                         Row(
                           children: [
-                           Expanded(
-                             child: Row(
-                               children: [
-                                 Image.network(controller.getImageUrl(controller.nextRanking?.icon??''),height: 45,width: 45,errorBuilder: (context,v1,v2){
-                                   return const SizedBox.shrink();
-                                 }),
-                                 const SizedBox(width: Dimensions.space15),
-                                 Column(
-                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                   children: [
-                                     Text(MyStrings.myInvest.tr,style: interSemiBoldDefault.copyWith(color: MyColor.getTextColor1()),),
-                                     const SizedBox(height: 1),
-                                     Text("${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(controller.user?.totalInvests??'0')} / ${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(controller.nextRanking?.minimumInvest??"0")}",style: interRegularDefault.copyWith(color: MyColor.primaryColor,fontWeight: FontWeight.w600),),
-                                     const SizedBox(height: 3),
-                                     Text('${controller.curSymbol}${controller.getUnlockAmount(controller.nextRanking?.minimumInvest??'',controller.user?.totalInvests??'')} ${MyStrings.toUnlock.tr}',style: interRegularDefault.copyWith(color: MyColor.getSecondaryTextColor()),),
-                                   ],
-                                 )
-                               ],
-                             ),
-                           ),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Image.network(controller.getImageUrl(controller.nextRanking?.icon??''),height: 45,width: 45,errorBuilder: (context,v1,v2){
+                                    return const SizedBox.shrink();
+                                  }),
+                                  const SizedBox(width: Dimensions.space15),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(MyStrings.myInvest.tr,style: interSemiBoldDefault.copyWith(color: MyColor.getTextColor1()),),
+                                      const SizedBox(height: 1),
+                                      Text("${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(controller.user?.totalInvests??'0')} / ${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(controller.nextRanking?.minimumInvest??"0")}",style: interRegularDefault.copyWith(color: MyColor.primaryColor,fontWeight: FontWeight.w600),),
+                                      const SizedBox(height: 3),
+                                      Text('${controller.curSymbol}${controller.getUnlockAmount(controller.nextRanking?.minimumInvest??'',controller.user?.totalInvests??'')} ${MyStrings.toUnlock.tr}',style: interRegularDefault.copyWith(color: MyColor.getSecondaryTextColor()),),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                         const CustomDivider(space: Dimensions.space12),
@@ -142,125 +142,246 @@ class _RankingScreenState extends State<RankingScreen> {
                     ),
                   ),
                 ),
-               const SizedBox(height: Dimensions.space15),
-               SizedBox(
-                 child: GridView.builder(
-                   shrinkWrap: true,
-                   physics: const NeverScrollableScrollPhysics(),
-                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 1.10),
-                   itemCount: controller.allRankList.length, itemBuilder: (context,index){
-                     UserRankings model = controller.allRankList[index];
-                   return IntrinsicHeight(
-                     child: GestureDetector(
-                       onTap: (){
-                        CustomBottomSheet(
-                          backgroundColor: MyColor.getCardBg(),
-                          child: Container(
-                          padding: const EdgeInsets.only(left: Dimensions.space12,right: Dimensions.space12),
-                          child: Column(
-                            children: [
-                              Center(
-                                child: Container(
-                                  height: 5,
-                                  width: 50,
-                                  padding: const EdgeInsets.all(1),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: MyColor.colorGrey.withValues(alpha:0.4),
+                const SizedBox(height: Dimensions.space15),
+                SizedBox(
+                  // height: MediaQuery.of(context).size.height * 0.7,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1.10,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                    ),
+                    itemCount: controller.allRankList.length,
+                    itemBuilder: (context, index) {
+                      UserRankings model = controller.allRankList[index];
+                      return GestureDetector( // Add GestureDetector here
+                        onTap: () {
+                          CustomBottomSheet(
+                            backgroundColor: MyColor.getCardBg(),
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                left: Dimensions.space12,
+                                right: Dimensions.space12,
+                              ),
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      height: 5,
+                                      width: 50,
+                                      padding: const EdgeInsets.all(1),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: MyColor.colorGrey.withValues(alpha: 0.4),
+                                      ),
+                                    ),
                                   ),
+                                  const SizedBox(height: Dimensions.space20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          MyStrings.level.tr,
+                                          style: interRegularDefault.copyWith(
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          model.level ?? '',
+                                          textAlign: TextAlign.end,
+                                          style: interRegularDefault.copyWith(
+                                            fontSize: Dimensions.fontLarge,
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const CustomDivider(space: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          MyStrings.minimumInvest.tr,
+                                          style: interRegularDefault.copyWith(
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          "${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(model.minimumInvest ?? '')}",
+                                          textAlign: TextAlign.end,
+                                          style: interRegularDefault.copyWith(
+                                            fontSize: Dimensions.fontLarge,
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const CustomDivider(space: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          MyStrings.directReferral.tr,
+                                          style: interRegularDefault.copyWith(
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          model.minReferral ?? '',
+                                          textAlign: TextAlign.end,
+                                          style: interRegularDefault.copyWith(
+                                            fontSize: Dimensions.fontLarge,
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const CustomDivider(space: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          MyStrings.referralInvest.tr,
+                                          style: interRegularDefault.copyWith(
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          "${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(model.minReferralInvest ?? '')}",
+                                          textAlign: TextAlign.end,
+                                          style: interRegularDefault.copyWith(
+                                            fontSize: Dimensions.fontLarge,
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const CustomDivider(space: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          MyStrings.bonus.tr,
+                                          style: interRegularDefault.copyWith(
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          "${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(model.bonus ?? '')}",
+                                          textAlign: TextAlign.end,
+                                          style: interRegularDefault.copyWith(
+                                            fontSize: Dimensions.fontLarge,
+                                            color: MyColor.getTextColor(),
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ).customBottomSheet(context);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: controller.isCross(index)
+                                ? MyColor.getActiveBadgeBGColor()
+                                : MyColor.getCardBg(),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (model.icon != null && model.icon!.isNotEmpty)
+                                Image.network(
+                                  controller.getImageUrl(model.icon!),
+                                  height: 65,
+                                  width: 65,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.error, size: 65, color: Colors.grey),
+                                ),
+                              const SizedBox(height: Dimensions.space5),
+                              Text(
+                                model.name?.tr ?? '',
+                                style: interRegularDefault.copyWith(
+                                  fontSize: Dimensions.fontSmall,
+                                  color: MyColor.getTextColor(),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                '${MyStrings.bonus.tr} - ${controller.curSymbol}${Converter.roundDoubleAndRemoveTrailingZero(model.bonus ?? '')}',
+                                style: interRegularDefault.copyWith(
+                                  color: MyColor.getTextColor(),
+                                  fontSize: Dimensions.fontSmall,
+                                  fontWeight: FontWeight.w300,
                                 ),
                               ),
-                              const SizedBox(height: Dimensions.space20,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(flex:4,child: Text(MyStrings.level.tr,style: interRegularDefault.copyWith(color:MyColor.getTextColor(),fontWeight: FontWeight.w600))),
-                                  Expanded(flex:3,child: Text(model.level??'',textAlign:TextAlign.end,style: interRegularDefault.copyWith(fontSize:Dimensions.fontLarge,color:MyColor.getTextColor(),fontWeight: FontWeight.w300))),
-                                ],
-                              ),
-                             const  CustomDivider(space: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(flex:4,child: Text(MyStrings.minimumInvest.tr,style: interRegularDefault.copyWith(color:MyColor.getTextColor(),fontWeight: FontWeight.w600))),
-                                  Expanded(flex:3,child: Text("${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(model.minimumInvest??'')}",textAlign:TextAlign.end,style: interRegularDefault.copyWith(fontSize:Dimensions.fontLarge,color:MyColor.getTextColor(),fontWeight: FontWeight.w400))),
-                                ],
-                              ),
-                              const CustomDivider(space: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(flex:4,child: Text(MyStrings.directReferral.tr,style: interRegularDefault.copyWith(color:MyColor.getTextColor(),fontWeight: FontWeight.w600))),
-                                  Expanded(flex:3,child: Text(model.minReferral??'',textAlign:TextAlign.end,style: interRegularDefault.copyWith(fontSize:Dimensions.fontLarge,color:MyColor.getTextColor(),fontWeight: FontWeight.w400))),
-                                ],
-                              ),
-                              const CustomDivider(space: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(flex:4,child: Text(MyStrings.referralInvest.tr,style: interRegularDefault.copyWith(color:MyColor.getTextColor(),fontWeight: FontWeight.w600))),
-                                  Expanded(flex:3,child: Text("${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(model.minReferralInvest??'')}",textAlign:TextAlign.end,style: interRegularDefault.copyWith(fontSize:Dimensions.fontLarge,color:MyColor.getTextColor(),fontWeight: FontWeight.w300))),
-                                ],
-                              ),
-                              const CustomDivider(space: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(flex:4,child: Text(MyStrings.bonus.tr,style: interRegularDefault.copyWith(color:MyColor.getTextColor(),fontWeight: FontWeight.w600),)),
-                                  Expanded(flex:3,child: Text("${controller.curSymbol}${Converter.twoDecimalPlaceFixedWithoutRounding(model.bonus??'')}",textAlign:TextAlign.end,style: interRegularDefault.copyWith(fontSize:Dimensions.fontLarge,color:MyColor.getTextColor(),fontWeight: FontWeight.w300))),
-                                ],
-                              ),
+                              if (controller.nextRanking?.id.toString() == model.id.toString())
+                                Column(
+                                  children: [
+                                    const SizedBox(height: Dimensions.space5),
+                                    LinearProgressIndicator(
+                                      value: Converter.getPercent(model.progressPercent),
+                                      backgroundColor:
+                                      MyColor.getScreenBgColor().withValues(alpha: .08),
+                                      color: MyColor.greenSuccessColor,
+                                      minHeight: 7,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
-                        )).customBottomSheet(context);
-                       },
-                       child: Container(
-                         width:double.infinity,
-                         alignment: Alignment.center,
-                         margin: const EdgeInsets.all(5),
-                         padding: const EdgeInsets.all(Dimensions.space10),
-                         decoration: BoxDecoration(
-                             color: controller.isCross(index)? MyColor.getActiveBadgeBGColor() : MyColor.getCardBg(),
-                             borderRadius: const BorderRadius.all(Radius.circular(12))
-                         ),
-                         child: Center(
-                           child: Column(
-                             crossAxisAlignment: CrossAxisAlignment.center,
-                             mainAxisAlignment: MainAxisAlignment.center,
-                             children: [
-                               controller.isCross(index)  ? Image.network(controller.getImageUrl(model.icon??''),colorBlendMode: BlendMode.darken,height: 65,width: 65,) :
-                               Stack(
-                                 children: [
-                                   ColorFiltered(
-                                       colorFilter: ColorFilter.mode(MyColor.getCardBg(), BlendMode.color),child: Image.network(controller.getImageUrl(model.icon??'') ,height: 65)),
-                                 ],
-                               ),
-                               const SizedBox(height: Dimensions.space5),
-                               Text(model.name?.tr??'',maxLines: 1,overflow:TextOverflow.ellipsis,style: interRegularDefault.copyWith(fontSize: Dimensions.fontSmall,color: MyColor.getTextColor(),fontWeight: FontWeight.w600),),
-                               Text('${MyStrings.bonus.tr} - ${controller.curSymbol}${Converter.roundDoubleAndRemoveTrailingZero(model.bonus ?? '')}',style: interRegularDefault.copyWith(color: MyColor.getTextColor(),fontSize:Dimensions.fontSmall,fontWeight: FontWeight.w300),),
-                               Visibility(
-                                 visible: controller.nextRanking?.id.toString()==model.id.toString(),
-                                 child:  Column(
-                                   children: [
-                                     const SizedBox(height: Dimensions.space5),
-                                     LinearProgressIndicator(
-                                       value: Converter.getPercent(model.progressPercent),
-                                       backgroundColor: MyColor.getScreenBgColor().withValues(alpha:.08),
-                                       color: MyColor.greenSuccessColor,
-                                       minHeight: 7,
-                                       borderRadius: BorderRadius.circular(4),
-                                     ),
-                                   ],
-                                 )
-                               )
-                             ],
-                           ),
-                         ),
-                       ),
-                     ),
-                   );
-                 }),
-               )
+                        ),
+                      );
+                    },
+                  ),
+                )
               ],
             ),
           ),

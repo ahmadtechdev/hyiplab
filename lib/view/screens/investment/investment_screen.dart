@@ -130,6 +130,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
                         invested: '${Converter.twoDecimalPlaceFixedWithoutRounding(model.amount??'')} ${controller.currency}',
                         isActive: controller.isActive,
                         message: controller.getMessage(index),
+                        earn: model.earn ?? '0',
                       ) ;
                     },
                   ),

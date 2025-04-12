@@ -27,7 +27,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
 
   List<String> iconList = [
     MyImages.homeIcon,
-    MyImages.awardIcon,
+    MyImages.airDropIcon,
     MyImages.plansIcon,
     MyImages.historyIcon,
     MyImages.menuIcon
@@ -35,7 +35,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
 
   final textList = [
     MyStrings.home,
-    MyStrings.award,
+    "Air Drop",
     MyStrings.plan,
     MyStrings.history,
     MyStrings.menu
@@ -98,7 +98,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
 
     else if (index == 1) {
       if (!(widget.currentIndex == 1)) {
-        Get.toNamed(RouteHelper.awardScreen);
+        Get.toNamed(RouteHelper.airdrop);
       }
     }
     else if (index == 2) {

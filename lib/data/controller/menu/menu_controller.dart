@@ -43,6 +43,12 @@ class MenuController extends GetxController  {
       GeneralSettingResponseModel model =
       GeneralSettingResponseModel.fromJson(jsonDecode(response.responseJson));
       if (model.status?.toLowerCase()==MyStrings.success.toLowerCase()) {
+        print("user Rank");
+        print(model.data?.generalSetting?.userRanking);
+        print("Stacking");
+        print(model.data?.generalSetting?.stakingOption);
+        print("Schedukle");
+        print(model.data?.generalSetting?.scheduleInvest);
         bool bTransferStatus  = model.data?.generalSetting?.bTransfer== '0'?false:true;
         poolInvestEnable  = model.data?.generalSetting?.poolOption == '0'?false:true;
         scheduleInvestEnable  = model.data?.generalSetting?.scheduleInvest == '0'?false:true;

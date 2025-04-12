@@ -3,17 +3,17 @@ import 'package:hyip_lab/data/model/language/language_model.dart';
 class MyStrings {
 
   //app name
-  static const String appName = "HyipLab";
+  static const String appName = "CMC";
 
   static List<String> onboardTitleList = [
-    'HyipLab is advanced investment platform',
+    'CMC is advanced investment platform',
     'Invest and watch your wallet grow',
     'Unlock a reliable source of high income.',
   ];
 
   //onboard text
   static List<String> onboardSubTitleList = [
-    'HyipLab where Innovative Investing Meets Your Financial Goals',
+    'CMC where Innovative Investing Meets Your Financial Goals',
     'Invest for a Brighter Future: Automatic Growth for Your Wallet',
     'Reliable Income Awaits: Your Key to Financial Success',
   ];

@@ -39,7 +39,7 @@ class RankingController extends GetxController{
     curSymbol = rankingRepo.apiClient.getCurrencyOrUsername(isSymbol: true);
     currency = rankingRepo.apiClient.getCurrencyOrUsername(isCurrency: true,isSymbol: true);
 
-    await allRankData();
+    loadPaginationData();
     isLoading = false;
     update();
 
@@ -47,10 +47,14 @@ class RankingController extends GetxController{
 
   void loadPaginationData()async{
     await allRankData();
+    print('Rank data received: ${allRankList.length} items');
+    print('Total rank items: ${allRankList.length}');
+    print('First item icon: ${allRankList.firstOrNull?.icon}');
+    print('Image URL: ${getImageUrl(allRankList.firstOrNull?.icon ?? '')}');
     update();
   }
 
-  Future<void> allRankData() async{
+  Future<void> allRankData() async {
     page = page + 1;
     if(page == 1){
       allRankList.clear();
@@ -63,26 +67,20 @@ class RankingController extends GetxController{
 
       nextRanking = rankingResponseModel.data?.nextRanking;
       user = rankingResponseModel.data?.user;
-      imagePath = rankingResponseModel.data?.imagePath??'';
-      // totalReffered = rankingResponseModel.data?.user?.activeReferrals?.length.toString()??"0";
+      imagePath = rankingResponseModel.data?.imagePath ?? '';
+      totalReffered = user?.activeReferrals?.length.toString() ?? "0";
 
       if(rankingResponseModel.status.toString().toLowerCase() == "success"){
         List<UserRankings>? tempList = rankingResponseModel.data?.userRankings;
         if(tempList != null && tempList.isNotEmpty){
           allRankList.addAll(tempList);
+          // Ensure we're not adding duplicates
+          allRankList = allRankList.toSet().toList();
         }
       }
-      else{
-        CustomSnackBar.showCustomSnackBar(errorList: rankingResponseModel.message?.error ?? [MyStrings.requestFail.toString()], msg: [], isError: true);
-      }
+      update();
     }
-    else{
-      CustomSnackBar.showCustomSnackBar(errorList: [responseModel.message.toString()], msg: [], isError: true);
-    }
-
-    update();
   }
-
   bool hasNext(){
     return nextPageUrl != null && nextPageUrl!.isNotEmpty && nextPageUrl != 'null' ? true : false;
   }
@@ -122,8 +120,13 @@ class RankingController extends GetxController{
 
   String imagePath = "";
   String getImageUrl(String imageUrl) {
-    String image = "${UrlContainer.domainUrl}/$imagePath/$imageUrl";
-    return image;
+    if (imageUrl.isEmpty) return '';
+    // Handle cases where the URL might already be complete
+    if (imageUrl.startsWith('http')) return imageUrl;
+    // Ensure path doesn't have double slashes
+    String cleanPath = imagePath.replaceAll(RegExp(r'/+'), '/');
+    String cleanImage = imageUrl.replaceAll(RegExp(r'^/+'), '');
+    return "${UrlContainer.domainUrl}/$cleanPath/$cleanImage";
   }
 
 }

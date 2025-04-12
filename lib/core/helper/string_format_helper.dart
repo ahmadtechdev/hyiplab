@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
-import 'package:hyip_lab/data/model/staking/staking_response_model.dart';
 
 import '../../environment.dart';
 import '../utils/my_strings.dart';

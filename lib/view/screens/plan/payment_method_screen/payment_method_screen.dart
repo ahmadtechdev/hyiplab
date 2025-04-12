@@ -59,7 +59,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         child: Scaffold(
           backgroundColor: MyColor.getScreenBgColor(),
           appBar: CustomAppBar(
-            title: "${MyStrings.confirmToInvestOn.tr} ${controller.plan.name.toString().tr}",
+            title: controller.isLoading
+                ? MyStrings.confirmToInvestOn.tr
+                : "${MyStrings.confirmToInvestOn.tr} ${controller.plan.name.toString().tr}",
             isTitleCenter: true,
             isShowBackBtn: true,
             bgColor: MyColor.getAppbarBgColor(),
@@ -139,9 +141,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             controller.setPaymentMethod(newValue);
                           },
                           items: controller.paymentMethodList.map((Methods method) {
+                            print("check");
+                            print(method.name.toString());
+
                             return DropdownMenuItem<Methods>(
                               value: method,
-                              child: Text(Converter.replaceUnderscoreWithSpace(method.name.toString()).tr, overflow: TextOverflow.ellipsis, style: interRegularDefault.copyWith(color: MyColor.getTextColor())),
+                              // child: Text(Converter.replaceUnderscoreWithSpace(method.name.toString()).tr, overflow: TextOverflow.ellipsis, style: interRegularDefault.copyWith(color: MyColor.getTextColor())),
+
+                              child: Text(method.name.toString(), overflow: TextOverflow.ellipsis, style: interRegularDefault.copyWith(color: MyColor.getTextColor())),
                             );
                           }).toList(),
                         ),

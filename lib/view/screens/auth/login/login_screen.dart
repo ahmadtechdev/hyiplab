@@ -115,14 +115,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   ),
                 ),
 
-                // Social Login Section
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: SocialLoginSection(),
-                  ),
-                ),
+                // // Social Login Section
+                // FadeTransition(
+                //   opacity: _fadeAnimation,
+                //   child: const Padding(
+                //     padding: EdgeInsets.symmetric(horizontal: 20),
+                //     child: SocialLoginSection(),
+                //   ),
+                // ),
 
                 // Sign Up Option
                 const SizedBox(height: 25),

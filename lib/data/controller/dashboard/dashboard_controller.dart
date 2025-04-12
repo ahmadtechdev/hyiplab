@@ -89,8 +89,9 @@ class DashBoardController extends GetxController {
 
     ResponseModel response = await dashboardRepo.getInvestmentData('active', 1);
     activePlanList.clear();
+    update();
 
-
+    print("Ahmad");
     if(response.statusCode == 200){
 
       investment.MyInvestmentResponseModel model =  investment.MyInvestmentResponseModel.fromJson(jsonDecode(response.responseJson));
@@ -98,6 +99,7 @@ class DashBoardController extends GetxController {
       if(model.status == 'success'){
 
         List< investment.Data>?tempList = model.data?.invests?.data;
+
         if(tempList!=null && tempList.isNotEmpty){
           activePlanList.addAll(tempList);
         }

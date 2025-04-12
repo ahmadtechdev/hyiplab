@@ -19,7 +19,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-
     Get.put(ApiClient(sharedPreferences: Get.find()));
     Get.put(GeneralSettingRepo(apiClient: Get.find()));
     Get.put(LocalizationController(sharedPreferences: Get.find()));
@@ -41,15 +40,42 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen size
+    final size = MediaQuery.of(context).size;
+    final logoWidth = size.width * 0.6; // 60% of screen width
+
     return SafeArea(
-      child: GetBuilder<SplashController>(
-        builder: (controller) => Scaffold(
-          backgroundColor: controller.noInternet ? MyColor.colorWhite : MyColor.primaryColor,
-          body: Center(
-            child: Image.asset(MyImages.appLogo, height: 120, width: 120),
+        child: GetBuilder<SplashController>(
+          builder: (controller) => Scaffold(
+            // Using light background color for better contrast with purple logo
+            backgroundColor: controller.noInternet
+                ? MyColor.colorWhite
+                : MyColor.lScreenBgColor, // Using light purple background from your color scheme
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo with increased size but not exceeding width
+                  Image.asset(
+                    MyImages.appLogo,
+                    width: logoWidth,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 20),
+                  // Optional: Add app name or loading indicator
+                  Text(
+                    "ClicksMax",
+                    style: TextStyle(
+                      color: MyColor.lTextColor,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      )
+        )
     );
   }
 }

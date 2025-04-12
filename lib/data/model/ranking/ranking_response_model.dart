@@ -64,7 +64,11 @@ class Data {
         _userRankings?.add(UserRankings.fromJson(v));
       });
     }
+    print("user_rankings ranking");
+    print(_userRankings);
     _nextRanking = json['next_ranking'] != null ? NextRanking.fromJson(json['next_ranking']) : null;
+    print("next ranking");
+    print(_nextRanking);
     _user = json['user'] != null ? User.fromJson(json['user']) : null;
     _imagePath = json['image_path'];
   }

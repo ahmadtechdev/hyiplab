@@ -37,6 +37,8 @@ class User {
   String? lastRankUpdate;
   String? createdAt;
   String? updatedAt;
+  List<dynamic>? referrals;
+  List<dynamic>? activeReferrals;
 
   User({
     this.id,
@@ -77,6 +79,8 @@ class User {
     this.lastRankUpdate,
     this.createdAt,
     this.updatedAt,
+    this.referrals,
+    this.activeReferrals,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -118,6 +122,8 @@ class User {
     lastRankUpdate: json["last_rank_update"] != null ? json["last_rank_update"].toString() : "",
     createdAt: json["created_at"],
     updatedAt: json["updated_at"],
+    referrals: json["referrals"] != null ? List<dynamic>.from(json["referrals"].map((x) => x)) : null,
+    activeReferrals: json["active_referrals"] != null ? List<dynamic>.from(json["active_referrals"].map((x) => x)) : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -159,5 +165,7 @@ class User {
     "last_rank_update": lastRankUpdate,
     "created_at": createdAt,
     "updated_at": updatedAt,
+    "referrals": referrals != null ? List<dynamic>.from(referrals!.map((x) => x)) : null,
+    "active_referrals": activeReferrals != null ? List<dynamic>.from(activeReferrals!.map((x) => x)) : null,
   };
 }

@@ -120,7 +120,7 @@ class PaymentMethodController extends GetxController {
       if (model.message?.success != null) {
         List<Methods>? tempList = model.data?.methods;
         if (tempList != null && tempList.isNotEmpty) {
-          paymentMethodList.addAll(tempList);
+          // paymentMethodList.addAll(tempList);
         }
         if (paymentMethodList.isNotEmpty) {
           paymentMethod = paymentMethodList[0];

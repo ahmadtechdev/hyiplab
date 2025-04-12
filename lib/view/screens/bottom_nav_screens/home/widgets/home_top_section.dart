@@ -116,7 +116,7 @@ class _HomeTopSectionState extends State<HomeTopSection> with SingleTickerProvid
                               ),
                             ),
                             child: Icon(
-                              Icons.notifications_none_rounded,
+                              Icons.air_rounded,
                               color: MyColor.getPrimaryColor(),
                               size: 24,
                             ),

@@ -92,6 +92,8 @@ class DepositRepo{
   }
 
   Future<ResponseModel>submitInvestment(Map<String,dynamic>params)async{
+    print("params");
+    print(params);
     String url = '${UrlContainer.baseUrl}${UrlContainer.investStoreUrl}';
     ResponseModel model = await apiClient.request(url,method.Method.postMethod, params,passHeader: true);
     return model;

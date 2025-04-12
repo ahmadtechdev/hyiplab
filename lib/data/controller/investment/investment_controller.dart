@@ -26,28 +26,31 @@ class InvestmentController extends GetxController{
   List<investment.Data>investmentList = [];
 
 
-  Future<void>loadData()async{
-   currency = repo.apiClient.getCurrencyOrUsername();
-   curSymbol = repo.apiClient.getCurrencyOrUsername(isCurrency: true,isSymbol:true);
-   ResponseModel response = await repo.getInvestmentData(isActive?'active':'closed', page);
-   if(response.statusCode == 200){
-     MyInvestmentResponseModel model = MyInvestmentResponseModel.fromJson(jsonDecode(response.responseJson));
-     if(model.status?.toLowerCase() == 'success'){
-       List<investment.Data>?tempList = model.data?.invests?.data;
-       nextPageUrl = model.data?.invests?.nextPage;
-       if(tempList!=null && tempList.isNotEmpty){
-         investmentList.addAll(tempList);
-       }
-     } else{
-       CustomSnackBar.error(errorList: model.message?.error??[MyStrings.somethingWentWrong]);
-     }
-   } else{
-     CustomSnackBar.error(errorList: [response.message]);
-   }
-   isLoading = false;
-   update();
-  }
+  Future<void> loadData({bool forceRefresh = false}) async {
+    if (forceRefresh) {
+      page = 1;
+      investmentList.clear();
+      update(); // Immediate UI update for clearing
+    }
 
+    currency = repo.apiClient.getCurrencyOrUsername();
+    curSymbol = repo.apiClient.getCurrencyOrUsername(isCurrency: true, isSymbol: true);
+
+    ResponseModel response = await repo.getInvestmentData(isActive ? 'active' : 'closed', page);
+
+    if (response.statusCode == 200) {
+      MyInvestmentResponseModel model = MyInvestmentResponseModel.fromJson(jsonDecode(response.responseJson));
+      if (model.status?.toLowerCase() == 'success') {
+        List<investment.Data>? tempList = model.data?.invests?.data;
+        nextPageUrl = model.data?.invests?.nextPage;
+        if (tempList != null && tempList.isNotEmpty) {
+          investmentList.addAll(tempList);
+        }
+      }
+    }
+    isLoading = false;
+    update();
+  }
 
   String? nextPageUrl;
   bool hasNext(){

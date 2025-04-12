@@ -43,6 +43,7 @@ dependencies:
   equatable: ^2.0.7
   country_picker: ^2.0.27
   country_pickers: ^3.0.1
+  flutter_launcher_icons: ^0.13.0
   flutter_web3: ^2.1.9
   ethereum_addresses: ^1.0.2
   web3dart: ^2.6.1
@@ -51,6 +52,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo/splash_logo.png"
   flutter_lints: ^5.0.0
 
 flutter:
@@ -70,10 +75,14 @@ flutter:
     - assets/
 
   fonts:
-    - family: Inter
+    - family: Metropolis
       fonts:
-        - asset: assets/fonts/Inter-Regular.ttf
-
-    - family: Lora
-      fonts:
-        - asset: assets/fonts/Lora-Regular.ttf
+        - asset: assets/fonts/Metropolis-Regular.otf
+        - asset: assets/fonts/Metropolis-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Metropolis-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Metropolis-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Metropolis-ExtraBold.otf
+          weight: 800

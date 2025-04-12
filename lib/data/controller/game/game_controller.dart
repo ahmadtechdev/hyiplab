@@ -1,4 +1,3 @@
-// earn_game_controller.dart
 import 'dart:async';
 import 'dart:math';
 import 'package:get/get.dart';
@@ -16,6 +15,9 @@ class EarnGameController extends GetxController {
   final RxBool gameStarted = false.obs;
   final RxBool isProcessing = false.obs; // Flag to prevent rapid clicking
 
+  // Investment tracking
+  final RxString investmentId = ''.obs;
+
   // Non-reactive variables
   late List<String> cardsList;
   List<Map<int, String>> matchCheck = [];
@@ -29,9 +31,17 @@ class EarnGameController extends GetxController {
     super.onClose();
   }
 
+  void setInvestmentId(String id) {
+    investmentId.value = id;
+  }
+
+  void setRewardEarned(bool earned) {
+    rewardEarned.value = earned;
+  }
+
   void goToHome() {
     gameTimer?.cancel();
-    Get.offNamed(RouteHelper.homeScreen);
+    Get.back();
   }
 
   void initGame() {

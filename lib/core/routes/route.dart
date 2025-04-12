@@ -39,10 +39,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/model/user/user.dart';
 import '../../data/services/push_notification_service.dart';
-import '../../view/airdrop/airdrop_screen.dart';
+import '../../view/airdrop/airdrop_splash_screen.dart';
 import '../../view/components/preview_image.dart';
-import '../../view/screens/deposit/deposit_method/desposit_web_view.dart';
-import '../../view/screens/earn_game/earn_game.dart';
 import '../../view/screens/ticket/all_ticket_screen/all_ticket_screen.dart';
 import '../../view/screens/ticket/new_ticket_screen/new_ticket_screen.dart';
 import '../../view/screens/ticket/ticket_details_screen/ticket_details_screen.dart';
@@ -119,9 +117,9 @@ class RouteHelper {
     GetPage(name: verifyPassCodeScreen, page: () => const VerifyForgetPassScreen()),
     GetPage(name: resetPasswordScreen, page: () => const ResetPasswordScreen()),
     GetPage(name: homeScreen, page: () => const HomeScreen()),
-    GetPage(name: airdrop, page: () => const AirdropScreen()),
+    GetPage(name: airdrop, page: () => const AirdropSplashScreen()),
     GetPage(name: depositScreen, page: () => const DepositHistoryScreen()),
-    // GetPage(name: depositWebViewScreen, page: () => WebViewExample(redirectUrl: Get.arguments)),
+    GetPage(name: depositWebViewScreen, page: () => WebViewExample(redirectUrl: Get.arguments)),
 
     //withdraw
     GetPage(name: confirmWithdrawRequest, page: () => ConfirmWithdrawScreen(model: Get.arguments[0])),
@@ -134,7 +132,7 @@ class RouteHelper {
     GetPage(name: menuScreen, page: () => const MenuScreen()),
     GetPage(name: investmentScreen, page: () => const InvestmentScreen()),
     GetPage(name: planScreen, page: () => const PlanScreen()),
-    GetPage(name: awardScreen, page: () => EarnGameScreen()),
+    // GetPage(name: awardScreen, page: () => EarnGameScreen()),
     GetPage(name: referralScreen, page: () => const ReferralScreen()),
     GetPage(name: userAccountScreen, page: () => const UserAccountScreen()),
     GetPage(name: editProfileScreen, page: () => const EditProfileScreen()),
@@ -156,11 +154,11 @@ class RouteHelper {
     GetPage(name: twoFactorSetupScreen, page: () => const TwoFactorSetupScreen()),
     GetPage(name: languageScreen, page: () => const LanguageScreen()),
 
-    GetPage(
-      name: depositWebViewScreen,
-      page: () => const DepositWebViewScreen(),
-      transition: Transition.rightToLeft,
-    ),
+    // GetPage(
+    //   name: depositWebViewScreen,
+    //   page: () => const DepositWebViewScreen(),
+    //   transition: Transition.rightToLeft,
+    // ),
 
     //support ticket
     GetPage(name: allTicketScreen, page: () => const AllTicketScreen()),

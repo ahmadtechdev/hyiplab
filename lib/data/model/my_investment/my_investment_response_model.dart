@@ -106,13 +106,13 @@ class Data {
       int? id,
       String? userId,
       String? planId,
-      String? amount, 
-      String? interest, 
-      String? shouldPay, 
-      String? paid, 
+      String? amount,
+      String? interest,
+      String? shouldPay,
+      String? paid,
       String? period,
-      String? hours, 
-      String? timeName, 
+      String? hours,
+      String? timeName,
       String? returnRecTime,
       String? nextTime,
       String? nextTimePercent,
@@ -120,7 +120,9 @@ class Data {
       String? capitalStatus,
       String? capitalBack,
       String? walletType,
-      Plan? plan,}){
+    String? earn,
+
+    Plan? plan,}){
     _id = id;
     _userId = userId;
     _planId = planId;
@@ -138,6 +140,7 @@ class Data {
     _capitalStatus = capitalStatus;
     _capitalBack = capitalBack;
     _walletType = walletType;
+    _earn = earn;
     _plan = plan;
 }
 
@@ -159,6 +162,8 @@ class Data {
     _capitalStatus = json['capital_status'].toString();
     _capitalBack = json['capital_back'].toString();
     _walletType = json['wallet_type'].toString();
+    _earn = json['earn'] != null ? json['earn'].toString() : '0';
+    print('Parsed earn value: $_earn for investment ID: $_id');
     _plan = json['plan'] != null ? Plan.fromJson(json['plan']) : null;
   }
   int? _id;
@@ -178,6 +183,7 @@ class Data {
   String? _capitalStatus;
   String? _capitalBack;
   String? _walletType;
+  String? _earn;
   Plan? _plan;
 
   int? get id => _id;
@@ -197,6 +203,7 @@ class Data {
   String? get capitalStatus => _capitalStatus;
   String? get capitalBack => _capitalBack;
   String? get walletType => _walletType;
+  String? get earn => _earn;
   Plan? get plan => _plan;
 
   Map<String, dynamic> toJson() {
@@ -216,6 +223,7 @@ class Data {
     map['status'] = _status;
     map['capital_status'] = _capitalStatus;
     map['wallet_type'] = _walletType;
+    map['earn'] = _earn;
     if (_plan != null) {
       map['plan'] = _plan?.toJson();
     }
